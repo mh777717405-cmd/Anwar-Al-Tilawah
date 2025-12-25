@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>حلقة أنوار القرآن - نظام الحضور</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- شاشة تسجيل الدخول -->
+<div id="loginBox" class="login">
+    <h2>🔐 دخول المشرف</h2>
+    <input type="text" id="username" placeholder="اسم المستخدم">
+    <div class="passwordField">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <span class="togglePassword" onclick="togglePassword('password')">👁️</span>
+    </div>
+    <button onclick="login()">دخول</button>
+    <p>ليس لديك حساب؟ <a href="#" onclick="showRegister()">سجل هنا</a></p>
+    <p id="error"></p>
+</div>
+
+<!-- شاشة تسجيل حساب جديد -->
+<div id="registerBox" class="login" style="display:none;">
+    <h2>📝 تسجيل حساب جديد</h2>
+    <input type="text" id="newUsername" placeholder="اسم المستخدم">
+    <div class="passwordField">
+        <input type="password" id="newPassword" placeholder="كلمة المرور">
+        <span class="togglePassword" onclick="togglePassword('newPassword')">👁️</span>
+    </div>
+    <button onclick="register()">تسجيل</button>
+    <p>لديك حساب؟ <a href="#" onclick="showLogin()">تسجيل الدخول</a></p>
+    <p id="registerError"></p>
+</div>
+
+<!-- النظام -->
+<div class="container" id="system" style="display:none;">
+
+    <!-- رأس الصفحة -->
+    <div class="header">
+        <h1>📖 حلقة أنوار القرآن</h1>
+        <p>نظام حضور وغياب الطلاب</p>
+        <button id="logoutBtn" onclick="logout()">🔒 تسجيل الخروج</button>
+        <button id="deleteAccountBtn" onclick="deleteAccount()">🗑 حذف الحساب</button>
+        <div class="footer">
+            <p>👨‍💻 المبرمج: <strong class="programmerName">محمد عبدالله صالح الشليف</strong></p>
+        </div>
+    </div>
+
+    <!-- إدارة الحلقات -->
+    <div class="halaqat">
+        <input type="text" id="halaqaName" placeholder="اسم الحلقة (اسم الأستاذ)">
+        <button onclick="addHalaqa()">➕ إنشاء حلقة</button>
+
+        <select id="halaqaSelect" onchange="changeHalaqa()">
+            <option value="">-- اختر الحلقة --</option>
+        </select>
+    </div>
+
+    <!-- إضافة طالب -->
+    <div class="form">
+        <input type="text" id="name" placeholder="اسم الطالب">
+        <input type="text" id="phone" placeholder="رقم ولي الأمر (مثال: 9677xxxxxx)">
+        <button onclick="addStudent()">➕ إضافة طالب</button>
+    </div>
+
+    <!-- جدول الطلاب -->
+    <table>
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody id="table">
+            <!-- يتم تعبئته من JavaScript -->
+        </tbody>
+    </table>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
