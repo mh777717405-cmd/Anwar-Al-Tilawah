@@ -40,11 +40,9 @@
     <div class="header">
         <h1>📖 حلقة أنوار القرآن</h1>
         <p>نظام حضور وغياب الطلاب</p>
+        <p class="programmerName">👨‍💻 المبرمج: محمد عبد الله صالح الشليف</p>
         <button id="logoutBtn" onclick="logout()">🔒 تسجيل الخروج</button>
         <button id="deleteAccountBtn" onclick="deleteAccount()">🗑 حذف الحساب</button>
-        <div class="footer">
-            <p>👨‍💻 المبرمج: <strong class="programmerName">محمد عبدالله صالح الشليف</strong></p>
-        </div>
     </div>
 
     <!-- إدارة الحلقات -->
@@ -60,7 +58,7 @@
     <!-- إضافة طالب -->
     <div class="form">
         <input type="text" id="name" placeholder="اسم الطالب">
-        <input type="text" id="phone" placeholder="رقم ولي الأمر (مثال: 9677xxxxxx)">
+        <input type="text" id="phone" placeholder="رقم ولي الأمر (9 أرقام)">
         <button onclick="addStudent()">➕ إضافة طالب</button>
     </div>
 
@@ -79,11 +77,46 @@
         </tbody>
     </table>
 
+    <!-- زر تقرير الأسبوع أسفل الصفحة -->
+    <button id="weeklyReportBtn" onclick="showWeeklyReport()">📊 تقرير الأسبوع</button>
+</div>
+
+<!-- صفحة تقرير الطالب -->
+<div class="container" id="studentReport" style="display:none;">
+    <h2 id="reportStudentName"></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+            </tr>
+        </thead>
+        <tbody id="reportTable"></tbody>
+    </table>
+    <button onclick="backToMain()">⬅ العودة</button>
+</div>
+
+<!-- صفحة تقرير الأسبوع -->
+<div class="container" id="weeklyReport" style="display:none;">
+    <h2 id="reportCircleName">تقرير الأسبوع</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>الطالب</th>
+                <th>عدد الغيابات</th>
+                <th>التواريخ</th>
+            </tr>
+        </thead>
+        <tbody id="weeklyReportTable"></tbody>
+    </table>
+    <button onclick="backToMain()">⬅ العودة</button>
 </div>
 
 <script src="script.js"></script>
 </body>
 </html>
+
+
 
 
 

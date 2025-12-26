@@ -8,7 +8,7 @@ function togglePassword(id) {
     input.type = input.type === "password" ? "text" : "password";
 }
 
-// إظهار نموذج التسجيل
+// إظهار شاشة التسجيل
 function showRegister() {
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("registerBox").style.display = "block";
@@ -39,7 +39,6 @@ function register() {
 function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
-
     users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(u => u.username === username && u.password === password);
     if (!user) return document.getElementById("error").innerText = "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
@@ -80,30 +79,29 @@ function deleteAccount() {
         currentHalaqa = "";
         document.getElementById("system").style.display = "none";
         document.getElementById("loginBox").style.display = "block";
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
         alert("تم حذف الحساب بنجاح.");
     }
 }
 
-// إعادة ضبط الحضور كل يوم
+// إعادة ضبط الحضور اليومي
 function resetAttendance() {
     for (let h in currentUser.halaqat) {
         currentUser.halaqat[h].forEach(student => {
             student.status = "—";
             student.date = "—";
+            student.absenceLog = student.absenceLog || []; // سجل الغياب
         });
     }
 }
 
-// حفظ بيانات المستخدم الحالي
+// حفظ بيانات المستخدم
 function save() {
     if (!currentUser) return;
     users = users.map(u => u.username === currentUser.username ? currentUser : u);
     localStorage.setItem("users", JSON.stringify(users));
 }
 
-/* إدارة الحلقات والطلاب */
+// إدارة الحلقات
 function addHalaqa() {
     let name = document.getElementById("halaqaName").value.trim();
     if (!name) return alert("اكتب اسم الحلقة");
@@ -122,36 +120,77 @@ function loadHalaqat() {
     for (let h in currentUser.halaqat) select.innerHTML += `<option value="${h}">${h}</option>`;
 }
 
-function changeHalaqa() { currentHalaqa = document.getElementById("halaqaSelect").value; render(); }
+function changeHalaqa() { 
+    currentHalaqa = document.getElementById("halaqaSelect").value; 
+    render(); 
+}
 
+// إضافة طالب والتحقق من رقم يمني
 function addStudent() {
     if (!currentHalaqa) return alert("اختر الحلقة أولًا");
     let name = document.getElementById("name").value.trim();
     let phone = document.getElementById("phone").value.trim();
+
     if (!name || !phone) return alert("أدخل اسم الطالب ورقم ولي الأمر");
 
-    currentUser.halaqat[currentHalaqa].push({ name, phone, status: "—", date: "—" });
-    save(); render();
+    // التحقق من أن الرقم اليمني يحتوي على 9 أرقام فقط
+    if (!/^\d{9}$/.test(phone)) return alert("أدخل رقم يمني صحيح مكون من 9 أرقام");
+
+    currentUser.halaqat[currentHalaqa].push({ 
+        name, 
+        phone, 
+        status: "—", 
+        date: "—", 
+        absenceLog: [] 
+    });
+
+    save(); 
+    render();
+
     document.getElementById("name").value = "";
     document.getElementById("phone").value = "";
 }
 
-function markPresent(i) { let s = currentUser.halaqat[currentHalaqa][i]; s.status="حاضر"; s.date=new Date().toLocaleDateString("ar-EG"); save(); render(); }
 
+
+// تسجيل الحضور
+function markPresent(i) {
+    let s = currentUser.halaqat[currentHalaqa][i]; 
+    s.status = "حاضر"; 
+    s.date = new Date().toLocaleDateString("ar-EG"); 
+    save(); 
+    render(); 
+}
+
+// تسجيل الغياب وإضافة للسجل
 function markAbsent(i) {
-    let s=currentUser.halaqat[currentHalaqa][i]; let date=new Date().toLocaleDateString("ar-EG");
-    s.status="غائب"; s.date=date;
-    let msg=`السلام عليكم،\nنود إشعاركم بغياب الطالب ${s.name}\nعن حلقة أنوار القرآن\nبتاريخ ${date}.\nجزاكم الله خيرًا.`;
+    let s = currentUser.halaqat[currentHalaqa][i]; 
+    let date = new Date().toLocaleDateString("ar-EG");
+    s.status = "غائب"; 
+    s.date = date;
+    s.absenceLog.push(date); // إضافة تاريخ الغياب للسجل
+
+    let msg = `السلام عليكم،\nنود إشعاركم بغياب الطالب ${s.name}\nعن حلقة أنوار التلاوة\nبتاريخ ${date}.\nجزاكم الله خيرًا.`;
     window.open(`https://wa.me/${s.phone}?text=${encodeURIComponent(msg)}`, "_blank");
+
     save(); render();
 }
 
-function deleteStudent(i){ if(confirm("هل أنت متأكد من حذف الطالب؟")) { currentUser.halaqat[currentHalaqa].splice(i,1); save(); render(); } }
+// حذف طالب
+function deleteStudent(i){
+    if(confirm("هل أنت متأكد من حذف الطالب؟")) {
+        currentUser.halaqat[currentHalaqa].splice(i,1); 
+        save(); 
+        render(); 
+    }
+}
 
+// عرض جدول الطلاب
 function render() {
     let table=document.getElementById("table");
     table.innerHTML="";
     if(!currentHalaqa) return;
+
     currentUser.halaqat[currentHalaqa].forEach((s,i)=>{
         table.innerHTML+=`<tr>
             <td>${s.name}</td>
@@ -161,10 +200,52 @@ function render() {
                 <button onclick="markPresent(${i})">✔ حاضر</button>
                 <button onclick="markAbsent(${i})">✖ غائب</button>
                 <button onclick="deleteStudent(${i})">🗑 حذف</button>
+                <button class="actionsBtn" onclick="showStudentReport(${i})">…</button>
             </td>
         </tr>`;
     });
 }
+
+// عرض تقرير الطالب الأسبوعي
+function showStudentReport(index){
+    const student = currentUser.halaqat[currentHalaqa][index];
+    document.getElementById("system").style.display = "none";
+    document.getElementById("studentReport").style.display = "block";
+    document.getElementById("reportStudentName").innerText = "الطالب: " + student.name;
+
+    let tbody = document.getElementById("reportTable");
+    tbody.innerHTML = "";
+    student.absenceLog.forEach(date => {
+        tbody.innerHTML += `<tr><td>${date}</td><td>غائب</td></tr>`;
+    });
+}
+
+// العودة للصفحة الرئيسية
+function backToMain(){
+    document.getElementById("studentReport").style.display = "none";
+    document.getElementById("weeklyReport").style.display = "none";
+    document.getElementById("system").style.display = "block";
+    render();
+}
+
+// عرض تقرير الحلقة الأسبوعي
+function showWeeklyReport(){
+    if(!currentHalaqa) return alert("اختر الحلقة أولًا");
+    document.getElementById("system").style.display = "none";
+    document.getElementById("weeklyReport").style.display = "block";
+    document.getElementById("reportCircleName").innerText = "الحلقة: " + currentHalaqa;
+
+    let tbody = document.getElementById("weeklyReportTable");
+    tbody.innerHTML = "";
+    currentUser.halaqat[currentHalaqa].forEach(student => {
+        tbody.innerHTML += `<tr>
+            <td>${student.name}</td>
+            <td>${student.absenceLog.length}</td>
+            <td>${student.absenceLog.join(", ")}</td>
+        </tr>`;
+    });
+}
+
 
 
 

@@ -5,7 +5,7 @@ body {
     margin: 0;
 }
 
-/* صندوق تسجيل الدخول */
+/* تسجيل الدخول والتسجيل */
 .login {
     background: white;
     width: 320px;
@@ -14,17 +14,12 @@ body {
     border-radius: 12px;
     text-align: center;
 }
-
 .login input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
 }
-
-.passwordField {
-    position: relative;
-}
-
+.passwordField { position: relative; }
 .passwordField .togglePassword {
     position: absolute;
     left: 10px;
@@ -32,21 +27,8 @@ body {
     transform: translateY(-50%);
     cursor: pointer;
 }
-
-/* الأزرار */
-.login button {
-    width: 100%;
-    padding: 10px;
-    background: #1b4332;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-#error, #registerError {
-    color: red;
-}
+.login button { width:100%; padding:10px; background:#1b4332; color:white; border:none; border-radius:6px; cursor:pointer; }
+#error, #registerError { color:red; }
 
 /* الحاوية الرئيسية */
 .container {
@@ -68,105 +50,48 @@ body {
     margin-bottom: 20px;
     position: relative;
 }
+.header h1 { margin:0; font-size:28px; }
+.header .programmerName { color:white; margin-top:10px; }
 
-.header h1 {
-    margin: 0;
-    font-size: 28px;
-}
+/* أزرار تسجيل الخروج وحذف الحساب */
+#logoutBtn { position:absolute; left:20px; top:25px; background:#e63946; color:white; padding:8px 12px; border-radius:6px; border:none; cursor:pointer;}
+#deleteAccountBtn { position:absolute; left:160px; top:25px; background:#ff5722; color:white; padding:8px 12px; border-radius:6px; border:none; cursor:pointer;}
+#logoutBtn:hover,#deleteAccountBtn:hover {opacity:0.85;}
 
-.header p {
-    margin-top: 8px;
-    opacity: 0.9;
-}
-/* زر تسجيل الخروج وحذف الحساب */
-#logoutBtn, #deleteAccountBtn {
-    position: absolute;
-    left: 20px;
-    top: 25px;
-    border: none;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-/* مسافة بين الزرين */
-#deleteAccountBtn {
-    left: 140px; /* زيادة المسافة عن زر تسجيل الخروج */
-    background: #ff5722;
-}
-
-#logoutBtn { background: #e63946; }
-
-#logoutBtn:hover, #deleteAccountBtn:hover { opacity: 0.85; }
-
-
-/* الحلقات */
-.halaqat, .form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-input, select {
-    padding: 10px;
-    flex: 1;
-}
-
-/* الأزرار */
-button {
-    padding: 10px 15px;
-    background: #40916c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-button:hover { opacity: 0.85; }
+/* إدارة الحلقات والطلاب */
+.halaqat, .form { display:flex; gap:10px; margin-bottom:15px; }
+input, select { padding:10px; flex:1; }
+button { padding:10px 15px; background:#40916c; color:white; border:none; border-radius:6px; cursor:pointer; }
+button:hover { opacity:0.85; }
 
 /* الجدول */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-th {
-    background: #1b4332;
-    color: white;
-    padding: 12px;
-}
-
-td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th { background:#1b4332; color:white; padding:12px; }
+td { border:1px solid #ddd; padding:10px; text-align:center; }
 
 /* الحالات */
-.present {
-    color: green;
-    font-weight: bold;
-}
+.present { color:green; font-weight:bold; }
+.absent { color:red; font-weight:bold; background:#ffe5e5; }
 
-.absent {
-    color: red;
-    font-weight: bold;
-    background: #ffe5e5;
+/* زر تقرير الأسبوع أسفل الصفحة */
+#weeklyReportBtn {
+    background:#264653;
+    color:white;
+    padding:10px 15px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    margin-top:20px;
+    display:block;
 }
+#weeklyReportBtn:hover { opacity:0.85; }
 
-/* تذييل الصفحة */
-.footer {
-    margin-top: 25px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-    text-align: center;
-    color: white;
-    font-size: 14px;
-}
+/* ثلاث نقاط للطالب */
+.actionsBtn { cursor:pointer; background:#264653; color:white; border:none; border-radius:6px; padding:5px 10px; }
+.actionsBtn:hover { opacity:0.85; }
 
-.footer .programmerName { color: white; }
+
+
 
 
 
