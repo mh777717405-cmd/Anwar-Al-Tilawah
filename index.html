@@ -1,124 +1,3247 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>حلقة أنوار القرآن - نظام الحضور</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الحلقات التعليمية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS كامل للنظام ===== */
+        
+        /* المتغيرات والأساسيات */
+        :root {
+            --primary-color: #25D366; /* لون واتساب */
+            --primary-dark: #128C7E;
+            --secondary-color: #7209b7;
+            --accent-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --success-color: #38b000;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* الطباعة */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+
+        /* الأدوات المساعدة */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .p-2 { padding: 1rem; }
+        .p-3 { padding: 1.5rem; }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.4rem;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #2d9500;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #e11574;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background-color: #e68919;
+        }
+
+        .btn-light {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+
+        .btn-light:hover {
+            background-color: #e9ecef;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+
+        .btn-whatsapp-direct {
+            background-color: #25D366;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-whatsapp-direct:hover {
+            background-color: #128C7E;
+            transform: scale(1.05);
+        }
+
+        /* النماذج */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+        }
+
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .country-code {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .phone-input {
+            flex: 1;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* صفحة تسجيل الدخول */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            padding: 1rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .login-footer {
+            padding: 1.5rem 2rem;
+            background-color: #f8f9fa;
+            border-top: 1px solid var(--light-gray);
+            text-align: center;
+        }
+
+        /* التذييل */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .developer-info {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        /* الرأس والقائمة الجانبية */
+        .app-header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--dark-color);
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            cursor: pointer;
+        }
+
+        /* التخطيط الرئيسي */
+        .app-layout {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 260px;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem 0;
+            transition: var(--transition);
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.9rem 1.5rem;
+            color: var(--dark-color);
+            text-decoration: none;
+            transition: var(--transition);
+            border-right: 4px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            background-color: rgba(37, 211, 102, 0.08);
+            border-right-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .sidebar-link.active {
+            background-color: rgba(37, 211, 102, 0.1);
+            border-right-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-icon {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        /* لوحة التحكم */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .stat-icon.students { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .stat-icon.halaqas { background: linear-gradient(135deg, #7209b7, #5a08a5); }
+        .stat-icon.present { background: linear-gradient(135deg, #38b000, #2d9500); }
+        .stat-icon.absent { background: linear-gradient(135deg, #f72585, #e11574); }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+        }
+
+        .recent-activity {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+        }
+
+        .activity-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .activity-icon.present { background-color: var(--success-color); }
+        .activity-icon.absent { background-color: var(--danger-color); }
+        .activity-icon.added { background-color: var(--primary-color); }
+        .activity-icon.edited { background-color: var(--warning-color); }
+        .activity-icon.whatsapp { background-color: #25D366; }
+
+        .activity-details p {
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+
+        /* الجداول */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            min-width: 800px;
+        }
+
+        .data-table th {
+            background-color: rgba(37, 211, 102, 0.08);
+            padding: 1rem;
+            text-align: right;
+            font-weight: 700;
+            color: var(--dark-color);
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(37, 211, 102, 0.04);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-present {
+            background-color: rgba(56, 176, 0, 0.15);
+            color: var(--success-color);
+        }
+
+        .status-absent {
+            background-color: rgba(247, 37, 133, 0.15);
+            color: var(--danger-color);
+        }
+
+        .status-not-recorded {
+            background-color: rgba(108, 117, 125, 0.15);
+            color: var(--gray-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* صفحة الحضور */
+        .attendance-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .attendance-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .attendance-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* التقارير */
+        .report-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .report-content {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .report-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-subtitle {
+            color: var(--gray-color);
+            font-size: 1.1rem;
+        }
+
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: rgba(37, 211, 102, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-card h4 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .summary-card p {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+        }
+
+        /* النوافذ المنبثقة */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-color);
+            cursor: pointer;
+            line-height: 1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* رسائل التنبيه */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background-color: rgba(56, 176, 0, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(56, 176, 0, 0.2);
+        }
+
+        .alert-danger {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(247, 37, 133, 0.2);
+        }
+
+        .alert-warning {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(248, 150, 30, 0.2);
+        }
+
+        .alert-info {
+            background-color: rgba(37, 211, 102, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(37, 211, 102, 0.2);
+        }
+
+        /* البحث والتصفية */
+        .search-container {
+            position: relative;
+            max-width: 300px;
+        }
+
+        .search-input {
+            padding-right: 2.5rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+
+        /* تصميم واتساب */
+        .whatsapp-message {
+            background-color: #dcf8c6;
+            border-radius: 18px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border: 1px solid #e6e6e6;
+            max-width: 80%;
+            margin-right: auto;
+        }
+
+        .whatsapp-container {
+            background-color: #e5ddd5;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .whatsapp-header {
+            background-color: #075e54;
+            color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* بطاقة واتساب */
+        .whatsapp-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #25D366;
+        }
+
+        .whatsapp-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .whatsapp-icon {
+            color: #25D366;
+            font-size: 1.5rem;
+        }
+
+        .whatsapp-info {
+            flex: 1;
+        }
+
+        .whatsapp-message-preview {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            white-space: pre-line;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .whatsapp-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* تلميحات التحقق */
+        .validation-hint {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .validation-hint.valid {
+            color: var(--success-color);
+        }
+
+        .validation-hint.invalid {
+            color: var(--danger-color);
+        }
+
+        /* التجاوب */
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                top: 80px;
+                right: -260px;
+                height: calc(100vh - 80px);
+                z-index: 99;
+                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar.active {
+                right: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .user-menu {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .attendance-controls,
+            .report-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .attendance-filters {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .phone-input-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .country-code {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .login-card {
+                max-width: 100%;
+            }
+
+            .modal {
+                max-width: 100%;
+            }
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .stat-info h3 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* رسائل المحاكاة */
+        .message-simulation {
+            background-color: #e8f4fd;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-right: 4px solid var(--accent-color);
+        }
+
+        .message-simulation p {
+            margin-bottom: 0.5rem;
+        }
+
+        .message-simulation strong {
+            color: var(--primary-color);
+        }
+
+        /* رسالة غياب الطالب */
+        .absence-message {
+            background-color: #fff8e1;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid #ffd54f;
+        }
+
+        /* رقم هاتف اليمن */
+        .yemen-phone-notice {
+            background-color: #e8f5e9;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-right: 4px solid #25D366;
+        }
+    </style>
 </head>
 <body>
-
-<!-- شاشة تسجيل الدخول -->
-<div id="loginBox" class="login">
-    <h2>🔐 دخول المشرف</h2>
-    <input type="text" id="username" placeholder="اسم المستخدم">
-    <div class="passwordField">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <span class="togglePassword" onclick="togglePassword('password')">👁️</span>
-    </div>
-    <button onclick="login()">دخول</button>
-    <p>ليس لديك حساب؟ <a href="#" onclick="showRegister()">سجل هنا</a></p>
-    <p id="error"></p>
-</div>
-
-<!-- شاشة تسجيل حساب جديد -->
-<div id="registerBox" class="login" style="display:none;">
-    <h2>📝 تسجيل حساب جديد</h2>
-    <input type="text" id="newUsername" placeholder="اسم المستخدم">
-    <div class="passwordField">
-        <input type="password" id="newPassword" placeholder="كلمة المرور">
-        <span class="togglePassword" onclick="togglePassword('newPassword')">👁️</span>
-    </div>
-    <button onclick="register()">تسجيل</button>
-    <p>لديك حساب؟ <a href="#" onclick="showLogin()">تسجيل الدخول</a></p>
-    <p id="registerError"></p>
-</div>
-
-<!-- النظام -->
-<div class="container" id="system" style="display:none;">
-
-    <!-- رأس الصفحة -->
-    <div class="header">
-        <h1>📖 حلقة أنوار القرآن</h1>
-        <p>نظام حضور وغياب الطلاب</p>
-        <p class="programmerName">👨‍💻 المبرمج: محمد عبد الله صالح الشليف</p>
-        <button id="logoutBtn" onclick="logout()">🔒 تسجيل الخروج</button>
-        <button id="deleteAccountBtn" onclick="deleteAccount()">🗑 حذف الحساب</button>
-    </div>
-
-    <!-- إدارة الحلقات -->
-    <div class="halaqat">
-        <input type="text" id="halaqaName" placeholder="اسم الحلقة (اسم الأستاذ)">
-        <button onclick="addHalaqa()">➕ إنشاء حلقة</button>
-
-        <select id="halaqaSelect" onchange="changeHalaqa()">
-            <option value="">-- اختر الحلقة --</option>
-        </select>
+    <!-- ===== HTML كامل للنظام ===== -->
+    
+    <!-- صفحة تسجيل الدخول (الصفحة الأولى) -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">نظام إدارة الحلقات التعليمية</h1>
+                <p class="login-subtitle">تسجيل دخول المعلمين</p>
+            </div>
+            
+            <div class="login-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="username">اسم المستخدم</label>
+                        <input type="text" id="username" class="form-control" placeholder="أدخل اسم المستخدم" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">كلمة المرور</label>
+                        <div class="password-container">
+                            <input type="password" id="password" class="form-control" placeholder="أدخل كلمة المرور" required>
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-block">
+                            <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                        </button>
+                    </div>
+                    
+                    <div id="loginMessage" class="alert alert-danger hidden">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="messageText"></span>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="login-footer">
+                <p>ليس لديك حساب؟ <a href="#" id="showRegister">سجل كمدرس جديد</a></p>
+            </div>
+        </div>
     </div>
 
-    <!-- إضافة طالب -->
-    <div class="form">
-        <input type="text" id="name" placeholder="اسم الطالب">
-        <input type="text" id="phone" placeholder="رقم ولي الأمر (9 أرقام)">
-        <button onclick="addStudent()">➕ إضافة طالب</button>
+    <!-- صفحة التسجيل (مخفية في البداية) -->
+    <div id="registerPage" class="login-container hidden">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">تسجيل معلم جديد</h1>
+                <p class="login-subtitle">املأ البيانات لإنشاء حساب جديد</p>
+            </div>
+            
+            <div class="login-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="regFullName">الاسم الكامل</label>
+                        <input type="text" id="regFullName" class="form-control" placeholder="أدخل الاسم الكامل" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="regUsername">اسم المستخدم</label>
+                        <input type="text" id="regUsername" class="form-control" placeholder="أدخل اسم المستخدم" required>
+                        <small class="text-muted">يجب أن يكون اسم المستخدم فريداً</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="regPassword">كلمة المرور</label>
+                        <div class="password-container">
+                            <input type="password" id="regPassword" class="form-control" placeholder="أدخل كلمة المرور" required>
+                            <button type="button" class="toggle-password" id="toggleRegPassword">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">يجب أن تكون كلمة المرور 6 أحرف على الأقل</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="regConfirmPassword">تأكيد كلمة المرور</label>
+                        <div class="password-container">
+                            <input type="password" id="regConfirmPassword" class="form-control" placeholder="أكد كلمة المرور" required>
+                            <button type="button" class="toggle-password" id="toggleRegConfirmPassword">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-block">
+                            <i class="fas fa-user-plus"></i> إنشاء الحساب
+                        </button>
+                    </div>
+                    
+                    <div id="registerMessage" class="alert alert-danger hidden">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="registerMessageText"></span>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="login-footer">
+                <p>لديك حساب بالفعل؟ <a href="#" id="showLogin">سجل الدخول</a></p>
+            </div>
+        </div>
     </div>
 
-    <!-- جدول الطلاب -->
-    <table>
-        <thead>
-            <tr>
-                <th>الاسم</th>
-                <th>الحالة</th>
-                <th>التاريخ</th>
-                <th>إجراءات</th>
-            </tr>
-        </thead>
-        <tbody id="table">
-            <!-- يتم تعبئته من JavaScript -->
-        </tbody>
-    </table>
+    <!-- التطبيق الرئيسي (مخفي في البداية) -->
+    <div id="app" class="hidden">
+        <!-- الرأس -->
+        <header class="app-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="logo-text">نظام الحلقات</div>
+                    </div>
+                    
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <div class="user-avatar" id="userAvatar">م</div>
+                            <div>
+                                <div class="user-name" id="currentUserName">المعلم</div>
+                                <div class="user-role">معلم</div>
+                            </div>
+                        </div>
+                        <button id="logoutBtn" class="btn btn-light btn-small">
+                            <i class="fas fa-sign-out-alt"></i> خروج
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <!-- زر تقرير الأسبوع أسفل الصفحة -->
-    <button id="weeklyReportBtn" onclick="showWeeklyReport()">📊 تقرير الأسبوع</button>
-</div>
+        <!-- المحتوى الرئيسي -->
+        <div class="app-layout">
+            <!-- القائمة الجانبية -->
+            <nav class="sidebar" id="sidebar">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link active" data-page="dashboard">
+                            <i class="fas fa-tachometer-alt sidebar-icon"></i>
+                            <span>لوحة التحكم</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-page="halaqas">
+                            <i class="fas fa-users sidebar-icon"></i>
+                            <span>الحلقات</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-page="students">
+                            <i class="fas fa-user-graduate sidebar-icon"></i>
+                            <span>الطلاب</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-page="attendance">
+                            <i class="fas fa-clipboard-check sidebar-icon"></i>
+                            <span>تسجيل الحضور</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-page="reports">
+                            <i class="fas fa-chart-bar sidebar-icon"></i>
+                            <span>التقارير</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-<!-- صفحة تقرير الطالب -->
-<div class="container" id="studentReport" style="display:none;">
-    <h2 id="reportStudentName"></h2>
-    <table>
-        <thead>
-            <tr>
-                <th>التاريخ</th>
-                <th>الحالة</th>
-            </tr>
-        </thead>
-        <tbody id="reportTable"></tbody>
-    </table>
-    <button onclick="backToMain()">⬅ العودة</button>
-</div>
+            <!-- المحتوى -->
+            <main class="main-content" id="mainContent">
+                <!-- لوحة التحكم -->
+                <div id="dashboardPage" class="page">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-tachometer-alt page-icon"></i>
+                            لوحة التحكم
+                        </h1>
+                        <div class="search-container">
+                            <input type="text" id="dashboardSearch" class="form-control search-input" placeholder="بحث سريع...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon students">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalStudents">0</h3>
+                                <p>إجمالي الطلاب</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon halaqas">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalHalaqas">0</h3>
+                                <p>إجمالي الحلقات</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon present">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="presentToday">0</h3>
+                                <p>حضور اليوم</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon absent">
+                                <i class="fas fa-user-times"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="absentToday">0</h3>
+                                <p>غياب اليوم</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity card">
+                        <h2 class="mb-2">النشاطات الأخيرة</h2>
+                        <ul class="activity-list" id="activityList">
+                            <!-- سيتم إضافة النشاطات ديناميكياً -->
+                            <li class="activity-item">
+                                <div class="activity-icon added">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <p>مرحباً بك في نظام إدارة الحلقات التعليمية</p>
+                                    <div class="activity-time">الآن</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- زر اختبار -->
+                    <div class="text-center mt-3">
+                        <button onclick="HalaqaSystem.testSystem()" class="btn btn-info">
+                            <i class="fas fa-vial"></i> اختبار النظام
+                        </button>
+                    </div>
+                </div>
 
-<!-- صفحة تقرير الأسبوع -->
-<div class="container" id="weeklyReport" style="display:none;">
-    <h2 id="reportCircleName">تقرير الأسبوع</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>الطالب</th>
-                <th>عدد الغيابات</th>
-                <th>التواريخ</th>
-            </tr>
-        </thead>
-        <tbody id="weeklyReportTable"></tbody>
-    </table>
-    <button onclick="backToMain()">⬅ العودة</button>
-</div>
+                <!-- صفحة الحلقات -->
+                <div id="halaqasPage" class="page hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-users page-icon"></i>
+                            إدارة الحلقات
+                        </h1>
+                        <div>
+                            <button id="addHalaqaBtn" class="btn">
+                                <i class="fas fa-plus"></i> إضافة حلقة
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>يمكنك إدارة الحلقات التعليمية الخاصة بك هنا. كل حلقة تحتوي على مجموعة من الطلاب.</span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم الحلقة</th>
+                                    <th>عدد الطلاب</th>
+                                    <th>تاريخ الإنشاء</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="halaqasTableBody">
+                                <!-- سيتم إضافة الحلقات ديناميكياً -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-<script src="script.js"></script>
+                <!-- صفحة الطلاب -->
+                <div id="studentsPage" class="page hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-user-graduate page-icon"></i>
+                            إدارة الطلاب
+                        </h1>
+                        <div class="attendance-filters">
+                            <div class="search-container">
+                                <input type="text" id="searchStudents" class="form-control search-input" placeholder="بحث عن طالب...">
+                                <i class="fas fa-search search-icon"></i>
+                            </div>
+                            <button id="addStudentBtn" class="btn">
+                                <i class="fas fa-plus"></i> إضافة طالب
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم الطالب</th>
+                                    <th>رقم ولي الأمر</th>
+                                    <th>الحلقة</th>
+                                    <th>آخر حضور</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <!-- سيتم إضافة الطلاب ديناميكياً -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- صفحة الحضور -->
+                <div id="attendancePage" class="page hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-clipboard-check page-icon"></i>
+                            تسجيل الحضور
+                        </h1>
+                        <div class="attendance-controls">
+                            <div class="attendance-filters">
+                                <div class="attendance-date">
+                                    <label for="attendanceDate" class="form-label">التاريخ:</label>
+                                    <input type="date" id="attendanceDate" class="form-control">
+                                </div>
+                                <select id="halaqaFilter" class="form-control" style="min-width: 200px;">
+                                    <option value="all">جميع الحلقات</option>
+                                </select>
+                            </div>
+                            <div>
+                                <button id="markAllPresentBtn" class="btn btn-success btn-small">
+                                    <i class="fas fa-check"></i> تعيين الجميع حاضرين
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>عند تحديد طالب كـ "غائب"، يمكنك إرسال رسالة مباشرة إلى ولي الأمر عبر واتساب.</span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم الطالب</th>
+                                    <th>الحلقة</th>
+                                    <th>رقم ولي الأمر</th>
+                                    <th>حالة الحضور</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody">
+                                <!-- سيتم إضافة قائمة الحضور ديناميكياً -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button id="saveAttendanceBtn" class="btn btn-success">
+                            <i class="fas fa-save"></i> حفظ الحضور
+                        </button>
+                    </div>
+                </div>
+
+                <!-- صفحة التقارير -->
+                <div id="reportsPage" class="page hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-chart-bar page-icon"></i>
+                            التقارير والإحصائيات
+                        </h1>
+                        <div class="report-controls">
+                            <select id="reportType" class="form-control">
+                                <option value="daily">تقرير يومي</option>
+                                <option value="weekly">تقرير أسبوعي</option>
+                                <option value="monthly">تقرير شهري</option>
+                            </select>
+                            
+                            <input type="date" id="reportDate" class="form-control">
+                            
+                            <select id="reportHalaqa" class="form-control">
+                                <option value="all">جميع الحلقات</option>
+                            </select>
+                            
+                            <button id="generateReportBtn" class="btn">
+                                <i class="fas fa-chart-bar"></i> إنشاء التقرير
+                            </button>
+                            
+                            <button id="printReportBtn" class="btn btn-light">
+                                <i class="fas fa-print"></i> طباعة
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="reportContent">
+                        <div class="text-center mt-4">
+                            <p class="text-muted">اختر نوع التقرير والتاريخ لبدء إنشاء التقارير</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- التذييل -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>نظام إدارة الحلقات التعليمية</span>
+                    </div>
+                    <div class="developer-info">
+                        <p>تم التطوير بواسطة: <strong>محمد عبدالله صالح الشليف</strong></p>
+                        <p>جميع الحقوق محفوظة © <span id="currentYear"></span></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== النوافذ المنبثقة ===== -->
+    
+    <!-- نافذة إضافة حلقة -->
+    <div id="addHalaqaModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة حلقة جديدة</h2>
+                <button class="modal-close" id="closeHalaqaModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addHalaqaForm">
+                    <div class="form-group">
+                        <label class="form-label" for="halaqaName">اسم الحلقة *</label>
+                        <input type="text" id="halaqaName" class="form-control" placeholder="مثال: حلقة القرآن الكريم" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="halaqaDescription">وصف الحلقة (اختياري)</label>
+                        <textarea id="halaqaDescription" class="form-control" rows="3" placeholder="وصف مختصر للحلقة"></textarea>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-block">إضافة الحلقة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة طالب -->
+    <div id="addStudentModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة طالب جديد</h2>
+                <button class="modal-close" id="closeStudentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addStudentForm">
+                    <div class="form-group">
+                        <label class="form-label" for="studentName">اسم الطالب الكامل *</label>
+                        <input type="text" id="studentName" class="form-control" placeholder="أدخل اسم الطالب" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="studentPhone">رقم هاتف ولي الأمر *</label>
+                        <div class="phone-input-container">
+                            <div class="country-code">+967</div>
+                            <input type="tel" id="studentPhone" class="form-control phone-input" placeholder="7XXXXXXX" pattern="7[0-9]{8}" required>
+                        </div>
+                        <div class="validation-hint" id="phoneValidation">
+                            <i class="fas fa-info-circle"></i>
+                            <span>يجب أن يبدأ الرقم بـ 7 ويتكون من 9 أرقام (مثال: 712345678)</span>
+                        </div>
+                        <div class="yemen-phone-notice">
+                            <i class="fas fa-flag"></i>
+                            <span>يسمح فقط بالأرقام اليمنية (تبدأ بـ 7)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="studentHalaqa">الحلقة *</label>
+                        <select id="studentHalaqa" class="form-control" required>
+                            <option value="">اختر الحلقة</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-block">إضافة الطالب</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة واتساب للغياب -->
+    <div id="whatsappAbsenceModal" class="modal-overlay hidden">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                    إرسال إشعار غياب عبر واتساب
+                </h2>
+                <button class="modal-close" id="closeWhatsappModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="whatsapp-card">
+                    <div class="whatsapp-card-header">
+                        <div class="whatsapp-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="whatsapp-info">
+                            <h4 style="margin: 0;">إشعار غياب الطالب</h4>
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--gray-color);">سيتم فتح واتساب للتواصل مع ولي الأمر</p>
+                        </div>
+                    </div>
+                    
+                    <div class="absence-message">
+                        <p><strong>الطالب:</strong> <span id="whatsappStudentName"></span></p>
+                        <p><strong>رقم ولي الأمر:</strong> <span id="whatsappPhoneNumber"></span></p>
+                        <p><strong>تاريخ الغياب:</strong> <span id="whatsappAbsenceDate"></span></p>
+                    </div>
+                    
+                    <div class="whatsapp-message-preview" id="whatsappMessagePreview">
+                        <!-- الرسالة ستظهر هنا -->
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>ستفتح نافذة جديدة لتطبيق واتساب مع رسالة جاهزة لإرسالها إلى ولي الأمر.</span>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <a href="#" id="openWhatsappBtn" class="btn btn-whatsapp-direct" target="_blank">
+                            <i class="fab fa-whatsapp"></i> فتح واتساب وإرسال الرسالة
+                        </a>
+                        <button id="cancelWhatsappBtn" class="btn btn-light">إلغاء</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل الطالب -->
+    <div id="editStudentModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">تعديل بيانات الطالب</h2>
+                <button class="modal-close" id="closeEditStudentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm">
+                    <input type="hidden" id="editStudentId">
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editStudentName">اسم الطالب الكامل *</label>
+                        <input type="text" id="editStudentName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editStudentPhone">رقم هاتف ولي الأمر *</label>
+                        <div class="phone-input-container">
+                            <div class="country-code">+967</div>
+                            <input type="tel" id="editStudentPhone" class="form-control phone-input" placeholder="7XXXXXXX" pattern="7[0-9]{8}" required>
+                        </div>
+                        <div class="validation-hint" id="editPhoneValidation">
+                            <i class="fas fa-info-circle"></i>
+                            <span>يجب أن يبدأ الرقم بـ 7 ويتكون من 9 أرقام (مثال: 712345678)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editStudentHalaqa">الحلقة *</label>
+                        <select id="editStudentHalaqa" class="form-control" required>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-block">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JavaScript كامل للنظام ===== -->
+    <script>
+        // النظام الأساسي
+        const HalaqaSystem = {
+            // البيانات المخزنة في LocalStorage
+            currentUser: null,
+            users: JSON.parse(localStorage.getItem('halaqa_users')) || [],
+            halaqas: JSON.parse(localStorage.getItem('halaqas')) || [],
+            students: JSON.parse(localStorage.getItem('students')) || [],
+            attendance: JSON.parse(localStorage.getItem('attendance')) || [],
+            activities: JSON.parse(localStorage.getItem('activities')) || [],
+            
+            // ===== الوظائف الأساسية =====
+            
+            // تهيئة النظام
+            init: function() {
+                this.loadDefaultData();
+                this.setupEventListeners();
+                this.checkAuth();
+                
+                // تعيين سنة التذييل
+                document.getElementById('currentYear').textContent = new Date().getFullYear();
+                
+                // تنظيف البيانات القديمة عند البدء
+                this.cleanupAttendance();
+            },
+            
+            // تحميل البيانات الافتراضية إذا لم تكن موجودة
+            loadDefaultData: function() {
+                if (this.users.length === 0) {
+                    // إنشاء معلم افتراضي للاختبار
+                    const defaultTeacher = {
+                        id: 1,
+                        fullName: "المعلم التجريبي",
+                        username: "teacher",
+                        password: "123456",
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    this.users.push(defaultTeacher);
+                    this.saveUsers();
+                }
+                
+                if (this.halaqas.length === 0) {
+                    // إنشاء حلقات افتراضية
+                    const defaultHalaqas = [
+                        {
+                            id: 1,
+                            teacherId: 1,
+                            name: "حلقة القرآن الكريم",
+                            description: "حفظ وتلاوة القرآن الكريم",
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 2,
+                            teacherId: 1,
+                            name: "حلقة الفقه",
+                            description: "تعليم أحكام الفقه الإسلامي",
+                            createdAt: new Date().toISOString()
+                        }
+                    ];
+                    
+                    this.halaqas = defaultHalaqas;
+                    this.saveHalaqas();
+                }
+                
+                if (this.students.length === 0) {
+                    // إنشاء طلاب افتراضيين بأرقام يمنية
+                    const defaultStudents = [
+                        {
+                            id: 1,
+                            name: "أحمد محمد علي",
+                            phone: "712345678",
+                            halaqaId: 1,
+                            teacherId: 1,
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 2,
+                            name: "سارة خالد العتيبي",
+                            phone: "723456789",
+                            halaqaId: 1,
+                            teacherId: 1,
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 3,
+                            name: "عمر عبدالله القحطاني",
+                            phone: "734567890",
+                            halaqaId: 2,
+                            teacherId: 1,
+                            createdAt: new Date().toISOString()
+                        }
+                    ];
+                    
+                    this.students = defaultStudents;
+                    this.saveStudents();
+                }
+                
+                if (this.activities.length === 0) {
+                    // نشاطات افتراضية
+                    this.activities = [
+                        {
+                            id: 1,
+                            type: "info",
+                            message: "تم إنشاء النظام بنجاح",
+                            timestamp: new Date().toISOString()
+                        }
+                    ];
+                    this.saveActivities();
+                }
+            },
+            
+            // حفظ البيانات
+            saveUsers: function() {
+                localStorage.setItem('halaqa_users', JSON.stringify(this.users));
+            },
+            
+            saveHalaqas: function() {
+                localStorage.setItem('halaqas', JSON.stringify(this.halaqas));
+            },
+            
+            saveStudents: function() {
+                localStorage.setItem('students', JSON.stringify(this.students));
+            },
+            
+            saveAttendance: function() {
+                localStorage.setItem('attendance', JSON.stringify(this.attendance));
+            },
+            
+            saveActivities: function() {
+                localStorage.setItem('activities', JSON.stringify(this.activities));
+            },
+            
+            // ===== الوظائف المساعدة =====
+            
+            // التحقق من صحة الرقم اليمني
+            validateYemeniPhone: function(phone) {
+                const phoneRegex = /^7[0-9]{8}$/;
+                return phoneRegex.test(phone);
+            },
+            
+            // تنسيق الرقم للعرض
+            formatPhoneForDisplay: function(phone) {
+                if (!phone) return '';
+                return `+967 ${phone}`;
+            },
+            
+            // تنسيق الرقم لواتساب
+            formatPhoneForWhatsapp: function(phone) {
+                if (!phone) return '';
+                return `967${phone}`;
+            },
+            
+            // إنشاء رابط واتساب
+            createWhatsappLink: function(phone, message) {
+                const formattedPhone = this.formatPhoneForWhatsapp(phone);
+                const encodedMessage = encodeURIComponent(message);
+                return `https://wa.me/${formattedPhone}?text=${encodedMessage}`;
+            },
+            
+            // إنشاء رسالة الغياب
+            createAbsenceMessage: function(studentName, date, halaqaName) {
+                const today = new Date(date);
+                const formattedDate = today.toLocaleDateString('ar-SA', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                return `السلام عليكم ورحمة الله وبركاته
+
+أود إبلاغكم بأن الطالب/ة *${studentName}* كان غائباً عن ${halaqaName} بتاريخ ${formattedDate}.
+
+نرجو منكم التواصل معنا لمعرفة سبب الغياب ومتابعة الطالب/ة.
+
+تقبلوا تحياتنا
+إدارة الحلقات التعليمية`;
+            },
+            
+            // إضافة نشاط جديد
+            addActivity: function(type, message) {
+                const activity = {
+                    id: this.activities.length > 0 ? Math.max(...this.activities.map(a => a.id)) + 1 : 1,
+                    type: type,
+                    message: message,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.activities.unshift(activity);
+                if (this.activities.length > 10) {
+                    this.activities = this.activities.slice(0, 10);
+                }
+                this.saveActivities();
+                
+                // تحديث عرض النشاطات
+                this.updateActivityList();
+            },
+            
+            // الحصول على الوقت المنقضي
+            getTimeAgo: function(timestamp) {
+                const now = new Date();
+                const past = new Date(timestamp);
+                const diffMs = now - past;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+                
+                if (diffMins < 1) {
+                    return 'الآن';
+                } else if (diffMins < 60) {
+                    return `منذ ${diffMins} دقيقة`;
+                } else if (diffHours < 24) {
+                    return `منذ ${diffHours} ساعة`;
+                } else if (diffDays < 7) {
+                    return `منذ ${diffDays} يوم`;
+                } else {
+                    return past.toLocaleDateString('ar-SA');
+                }
+            },
+            
+            // ===== الوظائف الرئيسية المعدلة =====
+            
+            // تنظيف سجلات الحضور للطلاب المحذوفين
+            cleanupAttendance: function() {
+                const studentIds = this.students.map(s => s.id);
+                const beforeCount = this.attendance.length;
+                
+                // تصفية سجلات الحضور للطلاب الموجودين فقط
+                this.attendance = this.attendance.filter(a => studentIds.includes(a.studentId));
+                this.saveAttendance();
+                
+                const afterCount = this.attendance.length;
+                const removed = beforeCount - afterCount;
+                
+                if (removed > 0) {
+                    console.log(`تم تنظيف ${removed} سجل حضور لطلاب محذوفين`);
+                }
+                
+                return removed;
+            },
+            
+            // تحديث جميع الإحصائيات
+            updateAllStats: function() {
+                // تنظيف البيانات أولاً
+                this.cleanupAttendance();
+                
+                // الحصول على بيانات المعلم الحالي
+                const totalStudents = this.getTeacherStudents().length;
+                const totalHalaqas = this.getTeacherHalaqas().length;
+                
+                // حساب الحضور والغياب لليوم
+                const today = new Date().toISOString().split('T')[0];
+                const todayAttendance = this.getAttendanceByDate(today);
+                
+                // تصفية فقط الطلاب الحاليين
+                const currentStudentIds = this.getTeacherStudents().map(s => s.id);
+                const validTodayAttendance = todayAttendance.filter(a => 
+                    currentStudentIds.includes(a.studentId)
+                );
+                
+                const presentToday = validTodayAttendance.filter(a => a.status === 'present').length;
+                const absentToday = validTodayAttendance.filter(a => a.status === 'absent').length;
+                
+                // تحديث واجهة المستخدم
+                if (document.getElementById('totalStudents')) {
+                    document.getElementById('totalStudents').textContent = totalStudents;
+                    document.getElementById('totalHalaqas').textContent = totalHalaqas;
+                    document.getElementById('presentToday').textContent = presentToday;
+                    document.getElementById('absentToday').textContent = absentToday;
+                }
+                
+                return {
+                    totalStudents: totalStudents,
+                    totalHalaqas: totalHalaqas,
+                    presentToday: presentToday,
+                    absentToday: absentToday
+                };
+            },
+            
+            // ===== نظام المصادقة =====
+            
+            // التحقق من المصادقة
+            checkAuth: function() {
+                const currentUser = JSON.parse(localStorage.getItem('current_user'));
+                if (currentUser) {
+                    this.currentUser = currentUser;
+                    this.showApp();
+                    this.loadDashboard();
+                } else {
+                    this.showLogin();
+                }
+            },
+            
+            // تسجيل الدخول
+            login: function(username, password) {
+                const user = this.users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    this.currentUser = user;
+                    localStorage.setItem('current_user', JSON.stringify(user));
+                    
+                    // إضافة نشاط
+                    this.addActivity('login', `تم تسجيل دخول ${user.fullName}`);
+                    
+                    this.showApp();
+                    this.loadDashboard();
+                    return true;
+                }
+                
+                return false;
+            },
+            
+            // تسجيل الخروج
+            logout: function() {
+                this.addActivity('logout', `تم تسجيل خروج ${this.currentUser.fullName}`);
+                
+                this.currentUser = null;
+                localStorage.removeItem('current_user');
+                this.showLogin();
+            },
+            
+            // التسجيل كمستخدم جديد
+            register: function(fullName, username, password) {
+                // التحقق من وجود المستخدم
+                if (this.users.find(u => u.username === username)) {
+                    return { success: false, message: "اسم المستخدم موجود مسبقاً" };
+                }
+                
+                // إنشاء المستخدم الجديد
+                const newUser = {
+                    id: this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1,
+                    fullName: fullName,
+                    username: username,
+                    password: password,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.users.push(newUser);
+                this.saveUsers();
+                
+                this.addActivity('register', `تم تسجيل معلم جديد: ${fullName}`);
+                
+                return { success: true, user: newUser };
+            },
+            
+            // ===== إدارة الحلقات =====
+            
+            // إضافة حلقة مع تحديث الإحصائيات
+            addHalaqa: function(name, description = '') {
+                const newId = this.halaqas.length > 0 ? Math.max(...this.halaqas.map(h => h.id)) + 1 : 1;
+                
+                const halaqa = {
+                    id: newId,
+                    teacherId: this.currentUser.id,
+                    name: name,
+                    description: description,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.halaqas.push(halaqa);
+                this.saveHalaqas();
+                
+                // تحديث النشاطات
+                this.addActivity('added', `تم إضافة حلقة جديدة: ${name}`);
+                
+                // تحديث جميع الإحصائيات فوراً
+                this.updateAllStats();
+                
+                return halaqa;
+            },
+            
+            // حذف حلقة مع تحديث الإحصائيات
+            deleteHalaqa: function(id) {
+                const index = this.halaqas.findIndex(h => h.id === id);
+                if (index !== -1) {
+                    const halaqa = this.halaqas[index];
+                    
+                    // 1. الحصول على جميع طلاب هذه الحلقة
+                    const studentsInHalaqa = this.students.filter(s => s.halaqaId === id);
+                    
+                    // 2. حذف سجلات حضور جميع طلاب الحلقة
+                    studentsInHalaqa.forEach(student => {
+                        this.attendance = this.attendance.filter(a => a.studentId !== student.id);
+                    });
+                    this.saveAttendance();
+                    
+                    // 3. حذف جميع طلاب الحلقة
+                    this.students = this.students.filter(s => s.halaqaId !== id);
+                    this.saveStudents();
+                    
+                    // 4. حذف الحلقة
+                    this.halaqas.splice(index, 1);
+                    this.saveHalaqas();
+                    
+                    // 5. تحديث النشاطات
+                    this.addActivity('deleted', `تم حذف الحلقة: ${halaqa.name} مع ${studentsInHalaqa.length} طالب`);
+                    
+                    // 6. تحديث جميع الإحصائيات فوراً
+                    this.updateAllStats();
+                    
+                    return { 
+                        success: true, 
+                        message: `تم حذف الحلقة "${halaqa.name}" و ${studentsInHalaqa.length} طالب` 
+                    };
+                }
+                return { success: false, message: "الحلقة غير موجودة" };
+            },
+            
+            // ===== إدارة الطلاب =====
+            
+            // إضافة طالب مع تحديث الإحصائيات
+            addStudent: function(name, phone, halaqaId) {
+                // التحقق من صحة الرقم اليمني
+                if (!this.validateYemeniPhone(phone)) {
+                    return { 
+                        success: false, 
+                        message: "رقم الهاتف غير صحيح. يجب أن يكون رقم يمني يبدأ بـ 7 ويتكون من 9 أرقام" 
+                    };
+                }
+                
+                const newId = this.students.length > 0 ? Math.max(...this.students.map(s => s.id)) + 1 : 1;
+                
+                const student = {
+                    id: newId,
+                    name: name,
+                    phone: phone,
+                    halaqaId: parseInt(halaqaId),
+                    teacherId: this.currentUser.id,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.students.push(student);
+                this.saveStudents();
+                
+                // تحديث النشاطات
+                this.addActivity('added', `تم إضافة طالب جديد: ${name}`);
+                
+                // تحديث جميع الإحصائيات فوراً
+                this.updateAllStats();
+                
+                return { success: true, student: student };
+            },
+            
+            // تحديث طالب
+            updateStudent: function(id, name, phone, halaqaId) {
+                // التحقق من صحة الرقم اليمني
+                if (!this.validateYemeniPhone(phone)) {
+                    return { success: false, message: "رقم الهاتف غير صحيح. يجب أن يكون رقم يمني يبدأ بـ 7 ويتكون من 9 أرقام" };
+                }
+                
+                const index = this.students.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    this.students[index].name = name;
+                    this.students[index].phone = phone;
+                    this.students[index].halaqaId = parseInt(halaqaId);
+                    this.saveStudents();
+                    
+                    this.addActivity('edited', `تم تعديل بيانات الطالب: ${name}`);
+                    
+                    // تحديث الإحصائيات
+                    this.updateAllStats();
+                    
+                    return { success: true };
+                }
+                return { success: false, message: "الطالب غير موجود" };
+            },
+            
+            // حذف طالب مع تحديث الإحصائيات
+            deleteStudent: function(id) {
+                const index = this.students.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    const student = this.students[index];
+                    
+                    // 1. حذف جميع سجلات الحضور للطالب
+                    this.attendance = this.attendance.filter(a => a.studentId !== id);
+                    this.saveAttendance();
+                    
+                    // 2. حذف الطالب
+                    this.students.splice(index, 1);
+                    this.saveStudents();
+                    
+                    // 3. تحديث النشاطات
+                    this.addActivity('deleted', `تم حذف الطالب: ${student.name}`);
+                    
+                    // 4. تحديث جميع الإحصائيات فوراً
+                    this.updateAllStats();
+                    
+                    return true;
+                }
+                return false;
+            },
+            
+            // ===== إدارة الحضور =====
+            
+            // تسجيل الحضور
+            markAttendance: function(studentId, date, status) {
+                // التحقق من وجود الطالب
+                const studentExists = this.students.find(s => s.id === studentId);
+                if (!studentExists) {
+                    console.error(`الطالب رقم ${studentId} غير موجود`);
+                    return null;
+                }
+                
+                // البحث عن تسجيل حضور موجود
+                const index = this.attendance.findIndex(a => 
+                    a.studentId === studentId && a.date === date
+                );
+                
+                const attendanceRecord = {
+                    id: index !== -1 ? this.attendance[index].id : 
+                        (this.attendance.length > 0 ? Math.max(...this.attendance.map(a => a.id)) + 1 : 1),
+                    studentId: studentId,
+                    date: date,
+                    status: status,
+                    timestamp: new Date().toISOString()
+                };
+                
+                if (index !== -1) {
+                    this.attendance[index] = attendanceRecord;
+                } else {
+                    this.attendance.push(attendanceRecord);
+                }
+                
+                this.saveAttendance();
+                
+                // تحديث الإحصائيات
+                this.updateAllStats();
+                
+                // إضافة نشاط
+                if (status === 'absent') {
+                    const student = this.students.find(s => s.id === studentId);
+                    if (student) {
+                        this.addActivity('absent', `تم تسجيل غياب للطالب: ${student.name}`);
+                        
+                        // عرض نافذة واتساب
+                        this.showWhatsappForAbsence(studentId, date);
+                    }
+                } else if (status === 'present') {
+                    const student = this.students.find(s => s.id === studentId);
+                    if (student) {
+                        this.addActivity('present', `تم تسجيل حضور للطالب: ${student.name}`);
+                    }
+                }
+                
+                return attendanceRecord;
+            },
+            
+            // عرض نافذة واتساب للغياب
+            showWhatsappForAbsence: function(studentId, date) {
+                const student = this.students.find(s => s.id === studentId);
+                if (!student) return;
+                
+                const halaqa = this.halaqas.find(h => h.id === student.halaqaId);
+                const halaqaName = halaqa ? halaqa.name : 'الحلقة';
+                
+                // تحديث معلومات النافذة
+                document.getElementById('whatsappStudentName').textContent = student.name;
+                document.getElementById('whatsappPhoneNumber').textContent = this.formatPhoneForDisplay(student.phone);
+                document.getElementById('whatsappAbsenceDate').textContent = date;
+                
+                // إنشاء الرسالة
+                const message = this.createAbsenceMessage(student.name, date, halaqaName);
+                document.getElementById('whatsappMessagePreview').textContent = message;
+                
+                // إنشاء رابط واتساب
+                const whatsappLink = this.createWhatsappLink(student.phone, message);
+                document.getElementById('openWhatsappBtn').href = whatsappLink;
+                
+                // إضافة حدث للنقر على الزر
+                document.getElementById('openWhatsappBtn').onclick = function(e) {
+                    window.open(whatsappLink, '_blank');
+                    setTimeout(() => {
+                        document.getElementById('whatsappAbsenceModal').classList.add('hidden');
+                    }, 500);
+                    
+                    HalaqaSystem.addActivity('whatsapp', `تم إرسال إشعار غياب عبر واتساب للطالب: ${student.name}`);
+                };
+                
+                document.getElementById('whatsappAbsenceModal').classList.remove('hidden');
+            },
+            
+            // ===== الوظائف المساعدة للبيانات =====
+            
+            // الحصول على حلقات المعلم الحالي
+            getTeacherHalaqas: function() {
+                return this.halaqas.filter(h => h.teacherId === this.currentUser.id);
+            },
+            
+            // الحصول على طلاب المعلم الحالي
+            getTeacherStudents: function() {
+                return this.students.filter(s => s.teacherId === this.currentUser.id);
+            },
+            
+            // الحصول على حضور طالب محدد
+            getStudentAttendance: function(studentId, date = null) {
+                if (date) {
+                    return this.attendance.find(a => a.studentId === studentId && a.date === date);
+                }
+                return this.attendance.filter(a => a.studentId === studentId);
+            },
+            
+            // الحصول على الحضور في تاريخ محدد (للطلاب الحاليين فقط)
+            getAttendanceByDate: function(date) {
+                const currentStudentIds = this.getTeacherStudents().map(s => s.id);
+                return this.attendance.filter(a => 
+                    a.date === date && currentStudentIds.includes(a.studentId)
+                );
+            },
+            
+            // ===== تحميل الصفحات =====
+            
+            // تحميل لوحة التحكم
+            loadDashboard: function() {
+                // تحديث جميع الإحصائيات
+                this.updateAllStats();
+                
+                // تحديث النشاطات
+                this.updateActivityList();
+            },
+            
+            // تحديث قائمة النشاطات
+            updateActivityList: function() {
+                const activityList = document.getElementById('activityList');
+                if (!activityList) return;
+                
+                activityList.innerHTML = '';
+                
+                this.activities.forEach(activity => {
+                    const timeAgo = this.getTimeAgo(activity.timestamp);
+                    let iconClass = 'added';
+                    let icon = 'fas fa-plus';
+                    
+                    if (activity.type === 'absent') {
+                        iconClass = 'absent';
+                        icon = 'fas fa-user-times';
+                    } else if (activity.type === 'present') {
+                        iconClass = 'present';
+                        icon = 'fas fa-check';
+                    } else if (activity.type === 'edited') {
+                        iconClass = 'edited';
+                        icon = 'fas fa-edit';
+                    } else if (activity.type === 'deleted') {
+                        iconClass = 'absent';
+                        icon = 'fas fa-trash';
+                    } else if (activity.type === 'login' || activity.type === 'logout') {
+                        iconClass = 'present';
+                        icon = 'fas fa-sign-in-alt';
+                    } else if (activity.type === 'whatsapp') {
+                        iconClass = 'whatsapp';
+                        icon = 'fab fa-whatsapp';
+                    }
+                    
+                    const activityItem = document.createElement('li');
+                    activityItem.className = 'activity-item';
+                    activityItem.innerHTML = `
+                        <div class="activity-icon ${iconClass}">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <p>${activity.message}</p>
+                            <div class="activity-time">${timeAgo}</div>
+                        </div>
+                    `;
+                    
+                    activityList.appendChild(activityItem);
+                });
+            },
+            
+            // تحميل صفحة الحلقات
+            loadHalaqasPage: function() {
+                const tableBody = document.getElementById('halaqasTableBody');
+                if (!tableBody) return;
+                
+                tableBody.innerHTML = '';
+                
+                const teacherHalaqas = this.getTeacherHalaqas();
+                
+                if (teacherHalaqas.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="5" class="text-center">
+                            <p class="text-muted">لا توجد حلقات حتى الآن. ابدأ بإضافة حلقة جديدة.</p>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                    return;
+                }
+                
+                teacherHalaqas.forEach((halaqa, index) => {
+                    const studentsCount = this.students.filter(s => s.halaqaId === halaqa.id).length;
+                    const date = new Date(halaqa.createdAt).toLocaleDateString('ar-SA');
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${halaqa.name}</strong></td>
+                        <td>${studentsCount}</td>
+                        <td>${date}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-danger btn-small btn-icon" onclick="HalaqaSystem.deleteHalaqaHandler(${halaqa.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            },
+            
+            // تحميل صفحة الطلاب
+            loadStudentsPage: function() {
+                const tableBody = document.getElementById('studentsTableBody');
+                if (!tableBody) return;
+                
+                tableBody.innerHTML = '';
+                
+                const teacherStudents = this.getTeacherStudents();
+                
+                if (teacherStudents.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="6" class="text-center">
+                            <p class="text-muted">لا توجد طلاب حتى الآن. ابدأ بإضافة طالب جديد.</p>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                    return;
+                }
+                
+                teacherStudents.forEach((student, index) => {
+                    const halaqa = this.halaqas.find(h => h.id === student.halaqaId);
+                    const halaqaName = halaqa ? halaqa.name : 'غير محدد';
+                    
+                    // الحصول على آخر حضور
+                    const studentAttendance = this.getStudentAttendance(student.id);
+                    let lastAttendance = 'لم يسجل';
+                    if (studentAttendance.length > 0) {
+                        const latest = studentAttendance.reduce((latest, current) => 
+                            new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest
+                        );
+                        lastAttendance = latest.status === 'present' ? 'حاضر' : 'غائب';
+                    }
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${student.name}</strong></td>
+                        <td>${this.formatPhoneForDisplay(student.phone)}</td>
+                        <td>${halaqaName}</td>
+                        <td>${lastAttendance}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-warning btn-small btn-icon" onclick="HalaqaSystem.editStudentHandler(${student.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-small btn-icon" onclick="HalaqaSystem.deleteStudentHandler(${student.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            },
+            
+            // تحميل صفحة الحضور
+            loadAttendancePage: function() {
+                const tableBody = document.getElementById('attendanceTableBody');
+                const halaqaFilter = document.getElementById('halaqaFilter');
+                const attendanceDate = document.getElementById('attendanceDate');
+                
+                if (!tableBody || !halaqaFilter || !attendanceDate) return;
+                
+                // تعيين التاريخ الحالي إذا لم يكن محدداً
+                const today = new Date().toISOString().split('T')[0];
+                if (!attendanceDate.value) {
+                    attendanceDate.value = today;
+                }
+                
+                // تحديث قائمة الحلقات في التصفية
+                halaqaFilter.innerHTML = '<option value="all">جميع الحلقات</option>';
+                this.getTeacherHalaqas().forEach(halaqa => {
+                    const option = document.createElement('option');
+                    option.value = halaqa.id;
+                    option.textContent = halaqa.name;
+                    halaqaFilter.appendChild(option);
+                });
+                
+                // الحصول على الطلاب بناءً على التصفية
+                let students = this.getTeacherStudents();
+                const selectedHalaqa = halaqaFilter.value;
+                
+                if (selectedHalaqa !== 'all') {
+                    students = students.filter(s => s.halaqaId === parseInt(selectedHalaqa));
+                }
+                
+                tableBody.innerHTML = '';
+                
+                if (students.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="6" class="text-center">
+                            <p class="text-muted">لا توجد طلاب في هذه الحلقة.</p>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                    return;
+                }
+                
+                const date = attendanceDate.value;
+                const existingAttendance = this.getAttendanceByDate(date);
+                
+                students.forEach((student, index) => {
+                    const halaqa = this.halaqas.find(h => h.id === student.halaqaId);
+                    const halaqaName = halaqa ? halaqa.name : 'غير محدد';
+                    
+                    // الحصول على حالة الحضور الحالية
+                    const currentAttendance = existingAttendance.find(a => a.studentId === student.id);
+                    const currentStatus = currentAttendance ? currentAttendance.status : 'not-recorded';
+                    
+                    let statusBadge = '';
+                    if (currentStatus === 'present') {
+                        statusBadge = '<span class="status-badge status-present">حاضر</span>';
+                    } else if (currentStatus === 'absent') {
+                        statusBadge = '<span class="status-badge status-absent">غائب</span>';
+                    } else {
+                        statusBadge = '<span class="status-badge status-not-recorded">لم يسجل</span>';
+                    }
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${student.name}</strong></td>
+                        <td>${halaqaName}</td>
+                        <td>${this.formatPhoneForDisplay(student.phone)}</td>
+                        <td id="status-${student.id}">${statusBadge}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-success btn-small" onclick="HalaqaSystem.markStudentAttendance(${student.id}, 'present')">
+                                    <i class="fas fa-check"></i> حاضر
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="HalaqaSystem.markStudentAttendance(${student.id}, 'absent')">
+                                    <i class="fas fa-times"></i> غائب
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            },
+            
+            // ===== معالجة الأحداث =====
+            
+            // تسجيل حضور طالب
+            markStudentAttendance: function(studentId, status) {
+                const date = document.getElementById('attendanceDate').value;
+                this.markAttendance(studentId, date, status);
+                
+                // تحديث العرض
+                let statusText = status === 'present' ? 'حاضر' : 'غائب';
+                let statusClass = status === 'present' ? 'status-present' : 'status-absent';
+                
+                const statusElement = document.getElementById(`status-${studentId}`);
+                if (statusElement) {
+                    statusElement.innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+                }
+                
+                // إظهار رسالة نجاح
+                this.showMessage(`تم تسجيل ${statusText} للطالب بنجاح`, 'success');
+            },
+            
+            // معالجة حذف الحلقة
+            deleteHalaqaHandler: function(halaqaId) {
+                if (confirm('تحذير: سيتم حذف الحلقة وجميع طلابها وسجلات حضورهم. هل أنت متأكد؟')) {
+                    const result = this.deleteHalaqa(halaqaId);
+                    if (result.success) {
+                        this.loadHalaqasPage();
+                        this.showMessage(result.message, 'success');
+                    } else {
+                        this.showMessage(result.message, 'danger');
+                    }
+                }
+            },
+            
+            // معالجة حذف الطالب
+            deleteStudentHandler: function(studentId) {
+                if (confirm('هل أنت متأكد من حذف هذا الطالب؟ سيتم حذف جميع سجلات حضوره أيضاً.')) {
+                    const success = this.deleteStudent(studentId);
+                    if (success) {
+                        this.loadStudentsPage();
+                        this.showMessage('تم حذف الطالب وتحديث الإحصائيات', 'success');
+                    } else {
+                        this.showMessage('حدث خطأ أثناء حذف الطالب', 'danger');
+                    }
+                }
+            },
+            
+            // معالجة تعديل الطالب
+            editStudentHandler: function(studentId) {
+                const student = this.students.find(s => s.id === studentId);
+                if (!student) return;
+                
+                document.getElementById('editStudentId').value = studentId;
+                document.getElementById('editStudentName').value = student.name;
+                document.getElementById('editStudentPhone').value = student.phone;
+                
+                // تعبئة قائمة الحلقات
+                const halaqaSelect = document.getElementById('editStudentHalaqa');
+                halaqaSelect.innerHTML = '';
+                
+                this.getTeacherHalaqas().forEach(halaqa => {
+                    const option = document.createElement('option');
+                    option.value = halaqa.id;
+                    option.textContent = halaqa.name;
+                    if (halaqa.id === student.halaqaId) {
+                        option.selected = true;
+                    }
+                    halaqaSelect.appendChild(option);
+                });
+                
+                document.getElementById('editStudentModal').classList.remove('hidden');
+            },
+            
+            // ===== التقارير =====
+            
+            // إنشاء تقرير
+            generateReport: function() {
+                const reportType = document.getElementById('reportType').value;
+                const date = document.getElementById('reportDate').value;
+                const halaqaId = document.getElementById('reportHalaqa').value;
+                
+                if (!date) {
+                    this.showMessage('الرجاء تحديد تاريخ', 'warning');
+                    return;
+                }
+                
+                // تحديث قائمة الحلقات في التقرير
+                const reportHalaqaSelect = document.getElementById('reportHalaqa');
+                reportHalaqaSelect.innerHTML = '<option value="all">جميع الحلقات</option>';
+                this.getTeacherHalaqas().forEach(halaqa => {
+                    const option = document.createElement('option');
+                    option.value = halaqa.id;
+                    option.textContent = halaqa.name;
+                    if (halaqaId && halaqa.id === parseInt(halaqaId)) {
+                        option.selected = true;
+                    }
+                    reportHalaqaSelect.appendChild(option);
+                });
+                
+                // الحصول على الطلاب بناءً على التصفية
+                let students = this.getTeacherStudents();
+                if (halaqaId !== 'all') {
+                    students = students.filter(s => s.halaqaId === parseInt(halaqaId));
+                }
+                
+                // حساب الفترة الزمنية
+                const reportDate = new Date(date);
+                let startDate, endDate, title;
+                
+                if (reportType === 'daily') {
+                    startDate = new Date(reportDate);
+                    endDate = new Date(reportDate);
+                    title = `تقرير يومي - ${reportDate.toLocaleDateString('ar-SA')}`;
+                } else if (reportType === 'weekly') {
+                    const day = reportDate.getDay();
+                    startDate = new Date(reportDate);
+                    startDate.setDate(reportDate.getDate() - day);
+                    
+                    endDate = new Date(reportDate);
+                    endDate.setDate(reportDate.getDate() + (6 - day));
+                    
+                    title = `تقرير أسبوعي - من ${startDate.toLocaleDateString('ar-SA')} إلى ${endDate.toLocaleDateString('ar-SA')}`;
+                } else {
+                    startDate = new Date(reportDate.getFullYear(), reportDate.getMonth(), 1);
+                    endDate = new Date(reportDate.getFullYear(), reportDate.getMonth() + 1, 0);
+                    
+                    const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                    title = `تقرير شهري - ${monthNames[reportDate.getMonth()]} ${reportDate.getFullYear()}`;
+                }
+                
+                // إنشاء التقرير
+                const reportContent = document.getElementById('reportContent');
+                let reportHTML = `
+                    <div class="report-content">
+                        <div class="report-header">
+                            <h2 class="report-title">${title}</h2>
+                            <p class="report-subtitle">نظام إدارة الحلقات التعليمية</p>
+                        </div>
+                        
+                        <div class="report-summary">
+                            <div class="summary-card">
+                                <h4>${students.length}</h4>
+                                <p>إجمالي الطلاب</p>
+                            </div>
+                            <div class="summary-card">
+                                <h4 id="reportPresentDays">0</h4>
+                                <p>أيام الحضور</p>
+                            </div>
+                            <div class="summary-card">
+                                <h4 id="reportAbsentDays">0</h4>
+                                <p>أيام الغياب</p>
+                            </div>
+                            <div class="summary-card">
+                                <h4 id="reportAttendanceRate">0%</h4>
+                                <p>نسبة الحضور</p>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>اسم الطالب</th>
+                                        <th>الحلقة</th>
+                                        <th>أيام الحضور</th>
+                                        <th>أيام الغياب</th>
+                                        <th>نسبة الحضور</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                
+                reportContent.innerHTML = reportHTML;
+                
+                // تعبئة التقرير
+                let totalPresent = 0;
+                let totalAbsent = 0;
+                const reportTableBody = document.getElementById('reportTableBody');
+                
+                students.forEach((student, index) => {
+                    const halaqa = this.halaqas.find(h => h.id === student.halaqaId);
+                    const halaqaName = halaqa ? halaqa.name : 'غير محدد';
+                    
+                    // حساب الحضور خلال الفترة
+                    const studentAttendance = this.getStudentAttendance(student.id);
+                    let presentDays = 0;
+                    let absentDays = 0;
+                    
+                    studentAttendance.forEach(record => {
+                        const recordDate = new Date(record.date);
+                        if (recordDate >= startDate && recordDate <= endDate) {
+                            if (record.status === 'present') {
+                                presentDays++;
+                            } else if (record.status === 'absent') {
+                                absentDays++;
+                            }
+                        }
+                    });
+                    
+                    totalPresent += presentDays;
+                    totalAbsent += absentDays;
+                    
+                    const totalDays = presentDays + absentDays;
+                    const attendanceRate = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${student.name}</strong></td>
+                        <td>${halaqaName}</td>
+                        <td>${presentDays}</td>
+                        <td>${absentDays}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span>${attendanceRate}%</span>
+                                <div style="flex: 1; height: 8px; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: ${attendanceRate}%; height: 100%; background-color: ${attendanceRate >= 80 ? '#38b000' : attendanceRate >= 60 ? '#f8961e' : '#f72585'};"></div>
+                                </div>
+                            </div>
+                        </td>
+                    `;
+                    
+                    reportTableBody.appendChild(row);
+                });
+                
+                // تحديث الإحصائيات
+                const totalDays = totalPresent + totalAbsent;
+                const overallRate = totalDays > 0 ? Math.round((totalPresent / totalDays) * 100) : 0;
+                
+                document.getElementById('reportPresentDays').textContent = totalPresent;
+                document.getElementById('reportAbsentDays').textContent = totalAbsent;
+                document.getElementById('reportAttendanceRate').textContent = overallRate + '%';
+            },
+            
+            // طباعة التقرير
+            printReport: function() {
+                window.print();
+            },
+            
+            // ===== وظائف العرض =====
+            
+            // إظهار رسالة
+            showMessage: function(message, type) {
+                const alertElement = document.createElement('div');
+                alertElement.className = `alert alert-${type}`;
+                alertElement.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                const mainContent = document.getElementById('mainContent');
+                if (mainContent) {
+                    mainContent.prepend(alertElement);
+                    
+                    setTimeout(() => {
+                        alertElement.remove();
+                    }, 5000);
+                }
+            },
+            
+            // ===== معالجة الأحداث =====
+            
+            // إعداد مستمعي الأحداث
+            setupEventListeners: function() {
+                // تسجيل الدخول
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    if (this.login(username, password)) {
+                        this.showMessage('تم تسجيل الدخول بنجاح', 'success');
+                    } else {
+                        const messageEl = document.getElementById('loginMessage');
+                        messageEl.querySelector('#messageText').textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                        messageEl.classList.remove('hidden');
+                        
+                        setTimeout(() => {
+                            messageEl.classList.add('hidden');
+                        }, 5000);
+                    }
+                });
+                
+                // التسجيل
+                document.getElementById('registerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const fullName = document.getElementById('regFullName').value;
+                    const username = document.getElementById('regUsername').value;
+                    const password = document.getElementById('regPassword').value;
+                    const confirmPassword = document.getElementById('regConfirmPassword').value;
+                    
+                    if (password.length < 6) {
+                        const messageEl = document.getElementById('registerMessage');
+                        messageEl.querySelector('#registerMessageText').textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                        messageEl.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        const messageEl = document.getElementById('registerMessage');
+                        messageEl.querySelector('#registerMessageText').textContent = 'كلمات المرور غير متطابقة';
+                        messageEl.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    const result = this.register(fullName, username, password);
+                    if (result.success) {
+                        this.currentUser = result.user;
+                        localStorage.setItem('current_user', JSON.stringify(result.user));
+                        this.showApp();
+                        this.loadDashboard();
+                        this.showMessage('تم إنشاء الحساب بنجاح', 'success');
+                    } else {
+                        const messageEl = document.getElementById('registerMessage');
+                        messageEl.querySelector('#registerMessageText').textContent = result.message;
+                        messageEl.classList.remove('hidden');
+                    }
+                });
+                
+                // التبديل بين تسجيل الدخول والتسجيل
+                document.getElementById('showRegister').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showRegister();
+                });
+                
+                document.getElementById('showLogin').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showLogin();
+                });
+                
+                // تسجيل الخروج
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.logout();
+                });
+                
+                // القائمة الجانبية
+                document.querySelectorAll('.sidebar-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        
+                        document.getElementById('sidebar').classList.remove('active');
+                        
+                        const page = link.getAttribute('data-page');
+                        this.showPage(page);
+                    });
+                });
+                
+                // القائمة الجانبية للأجهزة المحمولة
+                document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.toggle('active');
+                });
+                
+                // إضافة حلقة
+                document.getElementById('addHalaqaBtn').addEventListener('click', () => {
+                    document.getElementById('addHalaqaModal').classList.remove('hidden');
+                });
+                
+                document.getElementById('closeHalaqaModal').addEventListener('click', () => {
+                    document.getElementById('addHalaqaModal').classList.add('hidden');
+                });
+                
+                document.getElementById('addHalaqaForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('halaqaName').value;
+                    const description = document.getElementById('halaqaDescription').value;
+                    
+                    this.addHalaqa(name, description);
+                    document.getElementById('addHalaqaForm').reset();
+                    document.getElementById('addHalaqaModal').classList.add('hidden');
+                    
+                    this.loadHalaqasPage();
+                    this.showMessage('تم إضافة الحلقة وتحديث الإحصائيات', 'success');
+                });
+                
+                // إضافة طالب
+                document.getElementById('addStudentBtn').addEventListener('click', () => {
+                    const halaqaSelect = document.getElementById('studentHalaqa');
+                    halaqaSelect.innerHTML = '<option value="">اختر الحلقة</option>';
+                    
+                    this.getTeacherHalaqas().forEach(halaqa => {
+                        const option = document.createElement('option');
+                        option.value = halaqa.id;
+                        option.textContent = halaqa.name;
+                        halaqaSelect.appendChild(option);
+                    });
+                    
+                    document.getElementById('addStudentModal').classList.remove('hidden');
+                });
+                
+                document.getElementById('closeStudentModal').addEventListener('click', () => {
+                    document.getElementById('addStudentModal').classList.add('hidden');
+                });
+                
+                // التحقق من صحة الرقم أثناء الكتابة
+                document.getElementById('studentPhone').addEventListener('input', function() {
+                    const phone = this.value;
+                    const validationHint = document.getElementById('phoneValidation');
+                    const isValid = HalaqaSystem.validateYemeniPhone(phone);
+                    
+                    if (phone.length === 0) {
+                        validationHint.className = 'validation-hint';
+                        validationHint.innerHTML = '<i class="fas fa-info-circle"></i><span>يجب أن يبدأ الرقم بـ 7 ويتكون من 9 أرقام (مثال: 712345678)</span>';
+                    } else if (isValid) {
+                        validationHint.className = 'validation-hint valid';
+                        validationHint.innerHTML = '<i class="fas fa-check-circle"></i><span>رقم هاتف يمني صحيح</span>';
+                    } else {
+                        validationHint.className = 'validation-hint invalid';
+                        validationHint.innerHTML = '<i class="fas fa-times-circle"></i><span>رقم هاتف غير صحيح. يجب أن يبدأ بـ 7 ويتكون من 9 أرقام</span>';
+                    }
+                });
+                
+                document.getElementById('addStudentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('studentName').value;
+                    const phone = document.getElementById('studentPhone').value;
+                    const halaqaId = document.getElementById('studentHalaqa').value;
+                    
+                    if (!this.validateYemeniPhone(phone)) {
+                        this.showMessage('رقم الهاتف غير صحيح. يجب أن يكون رقم يمني يبدأ بـ 7 ويتكون من 9 أرقام', 'danger');
+                        return;
+                    }
+                    
+                    const result = this.addStudent(name, phone, halaqaId);
+                    if (result.success) {
+                        document.getElementById('addStudentForm').reset();
+                        document.getElementById('addStudentModal').classList.add('hidden');
+                        
+                        this.loadStudentsPage();
+                        this.showMessage('تم إضافة الطالب وتحديث الإحصائيات', 'success');
+                    } else {
+                        this.showMessage(result.message, 'danger');
+                    }
+                });
+                
+                // تعديل طالب
+                document.getElementById('editStudentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById('editStudentId').value;
+                    const name = document.getElementById('editStudentName').value;
+                    const phone = document.getElementById('editStudentPhone').value;
+                    const halaqaId = document.getElementById('editStudentHalaqa').value;
+                    
+                    const result = this.updateStudent(parseInt(id), name, phone, halaqaId);
+                    if (result.success) {
+                        document.getElementById('editStudentModal').classList.add('hidden');
+                        this.loadStudentsPage();
+                        this.showMessage('تم تحديث بيانات الطالب بنجاح', 'success');
+                    } else {
+                        this.showMessage(result.message, 'danger');
+                    }
+                });
+                
+                document.getElementById('closeEditStudentModal').addEventListener('click', () => {
+                    document.getElementById('editStudentModal').classList.add('hidden');
+                });
+                
+                // التحقق من صحة الرقم أثناء الكتابة في التعديل
+                document.getElementById('editStudentPhone').addEventListener('input', function() {
+                    const phone = this.value;
+                    const validationHint = document.getElementById('editPhoneValidation');
+                    const isValid = HalaqaSystem.validateYemeniPhone(phone);
+                    
+                    if (phone.length === 0) {
+                        validationHint.className = 'validation-hint';
+                        validationHint.innerHTML = '<i class="fas fa-info-circle"></i><span>يجب أن يبدأ الرقم بـ 7 ويتكون من 9 أرقام (مثال: 712345678)</span>';
+                    } else if (isValid) {
+                        validationHint.className = 'validation-hint valid';
+                        validationHint.innerHTML = '<i class="fas fa-check-circle"></i><span>رقم هاتف يمني صحيح</span>';
+                    } else {
+                        validationHint.className = 'validation-hint invalid';
+                        validationHint.innerHTML = '<i class="fas fa-times-circle"></i><span>رقم هاتف غير صحيح. يجب أن يبدأ بـ 7 ويتكون من 9 أرقام</span>';
+                    }
+                });
+                
+                // حفظ الحضور
+                document.getElementById('saveAttendanceBtn').addEventListener('click', () => {
+                    this.showMessage('تم حفظ الحضور بنجاح', 'success');
+                    this.loadDashboard();
+                });
+                
+                // تعيين الجميع حاضرين
+                document.getElementById('markAllPresentBtn').addEventListener('click', () => {
+                    const date = document.getElementById('attendanceDate').value;
+                    const students = this.getTeacherStudents();
+                    
+                    students.forEach(student => {
+                        this.markAttendance(student.id, date, 'present');
+                    });
+                    
+                    this.loadAttendancePage();
+                    this.showMessage('تم تعيين جميع الطلاب كحاضرين', 'success');
+                });
+                
+                // تصفية الحلقات في صفحة الحضور
+                document.getElementById('halaqaFilter').addEventListener('change', () => {
+                    this.loadAttendancePage();
+                });
+                
+                document.getElementById('attendanceDate').addEventListener('change', () => {
+                    this.loadAttendancePage();
+                });
+                
+                // إغلاق نافذة واتساب
+                document.getElementById('closeWhatsappModal').addEventListener('click', () => {
+                    document.getElementById('whatsappAbsenceModal').classList.add('hidden');
+                });
+                
+                document.getElementById('cancelWhatsappBtn').addEventListener('click', () => {
+                    document.getElementById('whatsappAbsenceModal').classList.add('hidden');
+                });
+                
+                // إنشاء التقرير
+                document.getElementById('generateReportBtn').addEventListener('click', () => {
+                    this.generateReport();
+                });
+                
+                // طباعة التقرير
+                document.getElementById('printReportBtn').addEventListener('click', () => {
+                    this.printReport();
+                });
+                
+                // البحث في لوحة التحكم
+                document.getElementById('dashboardSearch').addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    if (searchTerm) {
+                        const activityItems = document.querySelectorAll('.activity-item');
+                        activityItems.forEach(item => {
+                            const text = item.textContent.toLowerCase();
+                            if (text.includes(searchTerm)) {
+                                item.style.display = '';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                    } else {
+                        const activityItems = document.querySelectorAll('.activity-item');
+                        activityItems.forEach(item => {
+                            item.style.display = '';
+                        });
+                    }
+                });
+                
+                // البحث في الطلاب
+                document.getElementById('searchStudents').addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#studentsTableBody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+                
+                // إظهار/إخفاء كلمات المرور
+                document.querySelectorAll('.toggle-password').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const input = this.previousElementSibling;
+                        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                        input.setAttribute('type', type);
+                        
+                        const icon = this.querySelector('i');
+                        icon.className = type === 'password' ? 'far fa-eye' : 'far fa-eye-slash';
+                    });
+                });
+                
+                // إغلاق النوافذ المنبثقة بالنقر خارجها
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            this.classList.add('hidden');
+                        }
+                    });
+                });
+            },
+            
+            // ===== إدارة العرض =====
+            
+            showLogin: function() {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('registerPage').classList.add('hidden');
+                document.getElementById('app').classList.add('hidden');
+            },
+            
+            showRegister: function() {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('registerPage').classList.remove('hidden');
+                document.getElementById('app').classList.add('hidden');
+            },
+            
+            showApp: function() {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('registerPage').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                
+                if (this.currentUser) {
+                    const firstLetter = this.currentUser.fullName.charAt(0);
+                    document.getElementById('userAvatar').textContent = firstLetter;
+                    document.getElementById('currentUserName').textContent = this.currentUser.fullName;
+                }
+            },
+            
+            // عرض الصفحة المحددة
+            showPage: function(pageName) {
+                document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+                
+                document.getElementById(`${pageName}Page`).classList.remove('hidden');
+                
+                switch(pageName) {
+                    case 'dashboard':
+                        this.loadDashboard();
+                        break;
+                    case 'halaqas':
+                        this.loadHalaqasPage();
+                        break;
+                    case 'students':
+                        this.loadStudentsPage();
+                        break;
+                    case 'attendance':
+                        this.loadAttendancePage();
+                        break;
+                    case 'reports':
+                        const reportDate = document.getElementById('reportDate');
+                        if (!reportDate.value) {
+                            reportDate.value = new Date().toISOString().split('T')[0];
+                        }
+                        break;
+                }
+            },
+            
+            // ===== اختبار النظام =====
+            
+            // اختبار النظام
+            testSystem: function() {
+                console.log("=== اختبار النظام ===");
+                console.log("الطلاب:", this.students.length);
+                console.log("الحلقات:", this.halaqas.length);
+                console.log("سجلات الحضور:", this.attendance.length);
+                
+                const stats = this.updateAllStats();
+                alert(`✅ الإحصائيات الحالية:\n\nالطلاب: ${stats.totalStudents}\nالحلقات: ${stats.totalHalaqas}\nحضور اليوم: ${stats.presentToday}\nغياب اليوم: ${stats.absentToday}`);
+            }
+        };
+        
+        // تهيئة النظام عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            HalaqaSystem.init();
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
